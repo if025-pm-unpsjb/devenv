@@ -166,7 +166,7 @@ echo "---"
 # PyOCD
 downloader "$PYOCD_URL" "pyocd.zip" "PyOCD"
 echo "   ... Instalando en $PYOCD_DEST_DIR"
-unzip -q "pyocd.zip" -d "$TOOLS_DIR"
+unzip -q "pyocd.zip" -d "$TOOLS_DIR/$PYOCD_EXTRACTED_NAME"
 mv "$TOOLS_DIR/$PYOCD_EXTRACTED_NAME" "$PYOCD_DEST_DIR"
 rm "pyocd.zip"
 echo "---"
