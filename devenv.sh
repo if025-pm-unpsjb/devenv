@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script para configurar el entorno de desarrollo SETR (IF-025 PM UNPSJB)
-# Versión con chequeo de dependencias, salida concisa, plugins y PyOCD.
+# Versión con chequeo de dependencias, salida concisa, plugins, PyOCD y Tracealyzer.
 #
 # Este script crea la estructura de directorios y descarga/descomprime
 # automáticamente el software requerido para Linux x64, según la guía.
@@ -53,6 +53,7 @@ GCC_DEST_DIR="$TOOLS_DIR/arm-none-eabi-gcc"
 QEMU_DEST_DIR="$TOOLS_DIR/qemu"
 OPENOCD_DEST_DIR="$TOOLS_DIR/openocd"
 PYOCD_DEST_DIR="$TOOLS_DIR/pyocd"
+TRACEALYZER_DEST_DIR="$TOOLS_DIR/Tracealyzer"
 
 # URLs de descarga (Linux x64)
 ECLIPSE_URL="https://eclipse.c3sl.ufpr.br/technology/epp/downloads/release/2025-09/R/eclipse-embedcpp-2025-09-R-linux-gtk-x86_64.tar.gz"
@@ -60,6 +61,7 @@ GCC_URL="https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/dow
 QEMU_URL="https://github.com/xpack-dev-tools/qemu-arm-xpack/releases/download/v9.2.4-1/xpack-qemu-arm-9.2.4-1-linux-x64.tar.gz"
 OPENOCD_URL="https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.12.0-7/xpack-openocd-0.12.0-7-linux-x64.tar.gz"
 PYOCD_URL="https://github.com/pyocd/pyOCD/releases/download/v0.39.0/pyocd-linux-0.39.0.zip"
+TRACEALYZER_URL="https://github.com/if025-pm-unpsjb/devenv/raw/master/assets/TzForFreeRTOS-3.1.2.zip"
 
 # URLs y nombres de Plugins
 TAD_URL="https://github.com/if025-pm-unpsjb/doc-repo/raw/master/resources/com.nxp.freertos.gdb.tad_1.0.2.201704260904.jar"
@@ -74,6 +76,7 @@ GCC_EXTRACTED_NAME="xpack-arm-none-eabi-gcc-14.2.1-1.1"
 QEMU_EXTRACTED_NAME="xpack-qemu-arm-9.2.4-1"
 OPENOCD_EXTRACTED_NAME="xpack-openocd-0.12.0-7"
 PYOCD_EXTRACTED_NAME="pyocd-linux-0.39.0"
+TRACEALYZER_EXTRACTED_NAME="TzForFreeRTOS-3.1.2"
 
 # --- 3. Función de Descarga ---
 
@@ -163,10 +166,17 @@ echo "---"
 # PyOCD
 downloader "$PYOCD_URL" "pyocd.zip" "PyOCD"
 echo "   ... Instalando en $PYOCD_DEST_DIR"
-# 'unzip' ya fue verificado al inicio del script
 unzip -q "pyocd.zip" -d "$TOOLS_DIR"
 mv "$TOOLS_DIR/$PYOCD_EXTRACTED_NAME" "$PYOCD_DEST_DIR"
 rm "pyocd.zip"
+echo "---"
+
+# Tracealyzer (TzForFreeRTOS)
+downloader "$TRACEALYZER_URL" "tracealyzer.zip" "Tracealyzer (Tz)"
+echo "   ... Instalando en $TRACEALYZER_DEST_DIR"
+unzip -q "tracealyzer.zip" -d "$TOOLS_DIR"
+mv "$TOOLS_DIR/$TRACEALYZER_EXTRACTED_NAME" "$TRACEALYZER_DEST_DIR"
+rm "tracealyzer.zip"
 echo "---"
 
 
