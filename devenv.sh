@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Script para configurar el entorno de desarrollo SETR (IF-025 PM UNPSJB)
-# Versión con salida concisa.
+# Versión con salida concisa y plugins de Eclipse.
 #
 # Este script crea la estructura de directorios y descarga/descomprime
 # automáticamente el software requerido para Linux x64, según la guía.
@@ -30,6 +30,14 @@ GCC_URL="https://github.com/xpack-dev-tools/arm-none-eabi-gcc-xpack/releases/dow
 QEMU_URL="https://github.com/xpack-dev-tools/qemu-arm-xpack/releases/download/v9.2.4-1/xpack-qemu-arm-9.2.4-1-linux-x64.tar.gz"
 OPENOCD_URL="https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.12.0-7/xpack-openocd-0.12.0-7-linux-x64.tar.gz"
 
+# URLs y nombres de Plugins
+TAD_URL="https://github.com/if025-pm-unpsjb/doc-repo/raw/master/resources/com.nxp.freertos.gdb.tad_1.0.2.201704260904.jar"
+TAD_JAR="com.nxp.freertos.gdb.tad_1.0.2.201704260904.jar"
+TRACE_CORE_URL="https://github.com/if025-pm-unpsjb/doc-repo/raw/master/resources/com.percepio.tracealyzer.core_1.0.6.v20180223734.jar"
+TRACE_CORE_JAR="com.percepio.tracealyzer.core_1.0.6.v20180223734.jar"
+TRACE_UI_URL="https://github.com/if025-pm-unpsjb/doc-repo/raw/master/resources/com.percepio.tracealyzer.ui_1.0.6.v20180223734.jar"
+TRACE_UI_JAR="com.percepio.tracealyzer.ui_1.0.6.v20180223734.jar"
+
 # Nombres de las carpetas que se crearán al descomprimir
 GCC_EXTRACTED_NAME="xpack-arm-none-eabi-gcc-14.2.1-1.1"
 QEMU_EXTRACTED_NAME="xpack-qemu-arm-9.2.4-1"
@@ -48,7 +56,7 @@ downloader() {
   if command -v curl &> /dev/null; then
     # -L (seguir redirecciones), -s (silencioso), -o (archivo salida)
     curl -L -s -o "$output" "$url"
-  elif command -v wget &> /dev/null; then
+  elif command -v wget &> /dev/null;
     # -q (quiet/silencioso), -O (archivo salida)
     wget -q -O "$output" "$url"
   else
@@ -83,6 +91,20 @@ downloader "$ECLIPSE_URL" "eclipse.tar.gz" "Eclipse"
 echo "   ... Instalando en $ECLIPSE_DIR"
 tar -xzf "eclipse.tar.gz" -C "$ECLIPSE_DIR" --strip-components=1
 rm "eclipse.tar.gz"
+
+# Plugins de Eclipse
+echo "   ... Instalando plugins"
+PLUGINS_DEST_DIR="$ECLIPSE_DIR/plugins"
+
+# Descargar plugins al directorio temporal
+downloader "$TAD_URL" "$TAD_JAR" "Plugin FreeRTOS TAD"
+downloader "$TRACE_CORE_URL" "$TRACE_CORE_JAR" "Plugin Tracealyzer (Core)"
+downloader "$TRACE_UI_URL" "$TRACE_UI_JAR" "Plugin Tracealyzer (UI)"
+
+# Moverlos a la carpeta de plugins de Eclipse
+mv "$TAD_JAR" "$PLUGINS_DEST_DIR/"
+mv "$TRACE_CORE_JAR" "$PLUGINS_DEST_DIR/"
+mv "$TRACE_UI_JAR" "$PLUGINS_DEST_DIR/"
 echo "---"
 
 # Embedded Toolchain (GCC)
